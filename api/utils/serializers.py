@@ -3,6 +3,15 @@ from api.models import Content
 from rest_framework import serializers
 
 
+def format_author(method):
+    def wrapper(obj, *args, **kwargs):
+        author = obj.author
+        return {
+            'user_id': author.id,
+            'username': author.username,
+        }
+    return wrapper
+
 
 class ContentSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
@@ -18,11 +27,8 @@ class ContentSerializer(serializers.ModelSerializer):
         }
 
     @staticmethod
-    def get_author(obj: Content):
-        return {
-            'user_id': obj.author.id,
-            'username': obj.author.username,
-        }
+    @format_author
+    def get_author(obj: Content): ...
 
     def validate(self, attrs: dict) -> dict:
         if attrs.get('category') == 'world':
@@ -33,3 +39,11 @@ class ContentSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Resolution is required for this category.")
 
         return attrs
+
+
+class CommentSerializer(serializers.Serializer):
+    author = serializers.SerializerMethodField()
+
+    @staticmethod
+    @format_author
+    def get_author(obj: Content):...

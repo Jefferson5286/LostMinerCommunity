@@ -1,0 +1,30 @@
+POST http://localhost:8000/api/contents/create/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb24iOjJ9.T1fmZqU__H2PgygKZI2Ba4v-A-ROZhZt7pMeiOk_6jY
+Content-Type: application/json
+
+{
+  "name": "pq",
+  "category": "texture",
+  "version": "1.0",
+  "resolution": 32,
+  "download_url": "http://exemple.com/downloads/my-project-nando"
+}
+
+###
+GET http://localhost:8000/api/contents/details/1/
+
+###
+GET http://localhost:8000/api/contents/list
+
+###
+PATCH http://localhost:8000/api/contents/edit/2/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb24iOjJ9.T1fmZqU__H2PgygKZI2Ba4v-A-ROZhZt7pMeiOk_6jY
+Content-Type: application/json
+
+{
+  "name": "Projeto novo"
+}
+
+###
+DELETE http://localhost:8000/api/contents/delete/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb24iOjF9.Cxxz5wAm_igNtKWrGmdgd9ViJBm8q4TO43Y1wbmPecM

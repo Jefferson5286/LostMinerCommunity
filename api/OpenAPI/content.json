@@ -1,0 +1,340 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Content API Docs",
+    "version": "1.0.0",
+    "description": "API for managing content, including creation, updating, deletion, and image uploads."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api",
+      "description": "Base API URL"
+    }
+  ],
+  "paths": {
+    "/contents/create": {
+      "post": {
+        "tags": ["Content"],
+        "summary": "Create new content",
+        "description": "Allows an authenticated user to create new content. The content will be associated with the user making the request.",
+        "operationId": "createContent",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Content created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/contents/details/{id}": {
+      "get": {
+        "tags": ["Content"],
+        "summary": "Get content details by ID",
+        "description": "Retrieves the details of a specific content item by its ID.",
+        "operationId": "getContent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "ID of the content to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Content found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Content not found"
+          }
+        }
+      }
+    },
+    "/contents/list": {
+      "get": {
+        "tags": ["Content"],
+        "summary": "List all contents",
+        "description": "Retrieves a paginated list of content. Supports ordering by creation date or name.",
+        "operationId": "listContent",
+        "parameters": [
+          {
+            "name": "ordering",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["created_at", "name"],
+              "default": "created_at"
+            },
+            "description": "Order by field (either 'created_at' or 'name')"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of contents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Content"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contents/edit/{id}": {
+      "put": {
+        "tags": ["Content"],
+        "summary": "Edit existing content",
+        "description": "Allows an authenticated user who is the author of the content to update it.",
+        "operationId": "updateContent",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "ID of the content to update"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Content"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Content updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Content not found"
+          }
+        }
+      }
+    },
+    "/contents/delete/{id}": {
+      "delete": {
+        "tags": ["Content"],
+        "summary": "Delete content by ID",
+        "description": "Allows an authenticated user who is the author of the content to delete it.",
+        "operationId": "deleteContent",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "ID of the content to delete"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Content deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Content not found"
+          }
+        }
+      }
+    },
+    "/contents/upload_images/{id}": {
+      "post": {
+        "tags": ["Content"],
+        "summary": "Upload images to content",
+        "description": "Allows an authenticated user who is the author of the content to upload images and associate them with the content.",
+        "operationId": "uploadImages",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "ID of the content to upload images to"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imagens": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "The images to upload"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Images uploaded and content updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Content"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Content not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ContentCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Sample Content"
+          },
+          "description": {
+            "type": "string",
+            "example": "This is a sample content."
+          },
+          "category": {"type": "string", "example": "texture"},
+          "resolution": {"type": "integer", "example": 16},
+          "version": {"type":  "string", "example": "1.0"},
+          "download_url": {"type": "string", "example": "https://exemple.com/path/to/download"},
+          "images_urls": {"type": "object", "example": {
+            "image_1": "https://cloudinary.com/path/to/image.jpg",
+            "image_2": "https://cloudinary.com/path/to/image.jpg"
+          }}
+        },
+        "required": ["name", "category", "version"]
+      },
+      "Content": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer", "example": 1},
+          "name": {"type": "string", "example": "Sample Content"},
+          "description": {"type": "string", "example": "This is a sample content."},
+          "category": {"type": "string", "example": "texture"},
+          "download_url": {"type": "string", "example": "https://exemple.com/path/to/download"},
+          "author": {
+            "type": "object",
+            "properties": {
+              "user_id": {"type": "integer", "example": 1},
+              "username": {"type": "string", "example": "sample_user"}
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-11-28T12:34:56Z"
+          },
+          "images_urls": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "example": "https://cloudinary.com/path/to/image.jpg"
+            }
+          },
+          "resolution": {"type": "integer", "example": 16}
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from django.db.models import *
-from rest_framework.fields import ListField, ChoiceField
 
 
 class Connection(Model):
@@ -42,20 +41,23 @@ class Content(Model):
     )
 
     id = AutoField(primary_key=True)
-
-    name = CharField(unique=True, max_length=50)
+    name = CharField(max_length=50)
     description = TextField(blank=True, null=True)
-    author = ForeignKey('api.User', on_delete=PROTECT)
-
-    category = ChoiceField(category_choices)
-    version = CharField(unique=True, max_length=100)
+    author = ForeignKey('api.User', on_delete=CASCADE)
+    category = CharField(max_length=20, choices=category_choices)
+    version = CharField(max_length=100)
     created_at = DateTimeField(auto_now_add=True)
     resolution = IntegerField(null=True, blank=True)
-
     download_url = URLField(unique=True)
-    images_urls = ListField(default=[])
+    images_urls = JSONField(default=dict, blank=True)
 
     comments: QuerySet[Comment]
 
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['name', 'version'], name='unique_name_version')
+        ]
+
     def __str__(self):
         return self.name
+

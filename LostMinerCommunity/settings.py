@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -134,3 +135,14 @@ EMAIL_USE_TLS = False
 EMAIL_HOST_USER = '64f5e5003@smtp-brevo.com'
 EMAIL_HOST_PASSWORD = 'LMAwOr2asGUj1IkF'
 # DEFAULT_FROM_EMAIL = 'seu-email@dominio.com'
+
+cloudinary.config(
+  cloud_name="daamtcqte",
+  api_key=config('API_KEY'),
+  api_secret=config('API_SECRET')
+)
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}

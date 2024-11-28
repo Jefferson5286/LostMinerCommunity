@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 
 from api.models import Content
-from api.serializers import ContentSerializer
+from api.utils.serializers import ContentSerializer
 from api.utils.permissions import IsAuthenticated, AuthorizeContentOperation
 from api.utils.pagination import ContentPagination
 from api.utils.external_services import upload_image

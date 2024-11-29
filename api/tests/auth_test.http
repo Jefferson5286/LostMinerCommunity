@@ -1,4 +1,4 @@
-POST http://localhost:8000/api/auth/register/
+POST https://lostminercommunity.onrender.com/api/auth/register/
 Content-Type: application/json
 
 {

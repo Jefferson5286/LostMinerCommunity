@@ -1,6 +1,6 @@
 from api.utils.security import get_connection_from_token
-from api.models import User, Content
-from api.utils.exceptions import UnauthorizedContentOperation
+from api.models import User, Content, Comment
+from api.utils.exceptions import UnauthorizedOperation
 
 from rest_framework import permissions
 from rest_framework.request import Request
@@ -45,7 +45,26 @@ class AuthorizeContentOperation(permissions.BasePermission):
         content: Content = Content.objects.get(id=request.parser_context['kwargs'].get('id'))
 
         if author_id != content.author.id:
-            print('Não permitido')
-            raise UnauthorizedContentOperation()
+            raise UnauthorizedOperation()
+
+        return True
+
+
+class AuthorizeCommentOperation(permissions.BasePermission):
+    """
+            Permissão para autorizar operações em comentário baseado no ID do usuário.
+
+            Esta permissão garante que o usuário que faz a requisição (identificado por seu ID)
+        tenha permissão para realizar a operação em um comentário. A permissão só será concedida
+        se o ID do usuário for igual ao `id` do comentário.
+    """
+
+    def has_permission(self, request: Request, view) -> bool:
+        author_id: User = request.connection.user.id
+
+        comment: Comment = Comment.objects.get(id=request.parser_context['kwargs'].get('id'))
+
+        if author_id != comment.author.id:
+            raise UnauthorizedOperation()
 
         return True

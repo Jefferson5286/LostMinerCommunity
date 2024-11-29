@@ -1,4 +1,4 @@
-from api.models import Content
+from api.models import Content, Comment
 
 from rest_framework import serializers
 
@@ -41,9 +41,47 @@ class ContentSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class CommentSerializer(serializers.Serializer):
+class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
+    answering = serializers.SerializerMethodField()
+    content = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+        extra_kwargs = {
+            'answering': {'required': False}
+        }
+        read_only_fields = ('created_at', 'id')
 
     @staticmethod
     @format_author
-    def get_author(obj: Content):...
+    def get_author(obj: Comment): ...
+
+    @staticmethod
+    def get_content(obj: Comment):
+        """
+            Retorna o ID do conteúdo associado ao comentário.
+        """
+        return obj.content.id
+
+    @staticmethod
+    def get_answering(obj: Comment):
+        """
+            Retorna os dados do comentário sendo respondido (se houver).
+        """
+        if obj.answering:
+            return {
+                'id': obj.answering.id,
+                'author': {
+                    'user_id': obj.answering.author.id,
+                    'username': obj.answering.author.username,
+                }
+            }
+        return None
+
+class CommentEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('text',)

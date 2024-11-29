@@ -1,0 +1,24 @@
+POST http://localhost:8000/api/comments/create/6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb24iOjJ9.T1fmZqU__H2PgygKZI2Ba4v-A-ROZhZt7pMeiOk_6jY
+Content-Type: application/json
+
+{
+  "text": "This is a comment!",
+  "answering": 1
+}
+
+###
+GET http://localhost:8000/api/comments/6/list
+
+###
+PATCH http://localhost:8000/api/comments/edit/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb24iOjJ9.T1fmZqU__H2PgygKZI2Ba4v-A-ROZhZt7pMeiOk_6jY
+Content-Type: application/json
+
+{
+  "text": "New Text too!"
+}
+
+###
+DELETE http://localhost:8000/api/comments/delete/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb24iOjJ9.T1fmZqU__H2PgygKZI2Ba4v-A-ROZhZt7pMeiOk_6jY

@@ -1,5 +1,5 @@
 from django.urls import path
-from api.views import auth, content
+from api.views import auth, content, comment
 
 
 urlpatterns = [
@@ -15,4 +15,9 @@ urlpatterns = [
     path('contents/edit/<int:id>', content.UpdateContentView.as_view(), name='update_content'),
     path('contents/delete/<int:id>', content.DeleteContentView.as_view(), name='delete_content'),
     path('contents/upload_images/<int:id>', content.UploadImagesView.as_view(), name='upload_images'),
+
+    path('comments/<int:content_id>/create', comment.CreateCommentView.as_view(), name='create_comment'),
+    path('comments/<int:content_id>/list', comment.ListCommentsView.as_view(), name='list_comments'),
+    path('comments/edit/<int:id>', comment.UpdateCommentView.as_view(), name='update_comment'),
+    path('comments/delete/<int:id>', comment.DeleteComment.as_view(), name='delete_comment'),
 ]

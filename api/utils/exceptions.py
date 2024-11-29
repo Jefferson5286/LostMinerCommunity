@@ -1,6 +1,6 @@
 from rest_framework.exceptions import PermissionDenied
 
 
-class UnauthorizedContentOperation(PermissionDenied):
-    default_detail = 'You are not allowed to perform the operation on the requested content.'
+class UnauthorizedOperation(PermissionDenied):
+    default_detail = 'Not authorized to carry out the requested operation!'
     default_code = 'permission_denied'
